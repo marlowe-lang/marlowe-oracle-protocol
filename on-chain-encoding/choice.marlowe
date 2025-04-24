@@ -1,0 +1,17 @@
+When
+    [Case
+        (Choice
+            (ChoiceId
+                "ada price: QUERY_HASH"
+                (Address "addr_test1vq9prvx8ufwutkwxx9cmmuuajaqmjqwujqlp9d8pvg6gupczgtm9j")
+            )
+            [Bound 1 1000000000000000000]
+        )
+        (Pay
+            (Address "addr_test1vq9prvx8ufwutkwxx9cmmuuajaqmjqwujqlp9d8pvg6gupczgtm9j")
+            (Party (Role "User"))
+            (Token "" "")
+            (ConstantParam "Price")
+            Close
+        )]
+    1744283576202 Close

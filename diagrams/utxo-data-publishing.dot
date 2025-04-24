@@ -1,0 +1,91 @@
+digraph PlainOraclePublishing {
+  rankdir=LR;
+  graph [pad="0.5", nodesep="0.8", ranksep="1"];
+  node [shape=rect, style="filled", fillcolor="#f9f9f9", fontname="Courier New", fontsize="8pt"];
+  edge [arrowhead=none, tailport="e", headport="w", color="#aaa", fontname="Courier New", fontsize="8pt"];
+
+  Tx [label=<<b>Tx publishing<br />data point</b>> color="#aaa" shape="box" style="rounded,filled"];
+
+
+  FundingOutput [shape=point];
+  FundingOutput -> Tx [label=<<i>Tx funding</i>>];
+
+  DataPointOutput [label=<
+    <TABLE CELLSPACING="0" CELLPADDING="4" border="0" CELLBORDER="1" color="#aaa">
+      <TR>
+        <TD colspan="2" align="center"><b>TxOut with data</b></TD>
+      </TR>
+      <TR>
+        <TD align="left"><b>datum</b></TD>
+        <TD align="left" balign="left" cellpadding="8">data point<br/>signed by oracle</TD>
+      </TR>
+    </TABLE>
+  > shape="plain" border="1" color="#000"]
+
+  Tx -> DataPointOutput [label=<Data point output>];
+
+  change [shape=point];
+  Tx -> change [label=<<i>Tx change</i>>];
+
+  DataPointOutputPoint [shape=point];
+  DataPointOutput -> DataPointOutputPoint;
+
+  SpendingValidatorInitialThreadPoint [shape=point];
+  SpendingValidatorInitialThreadPoint -> SpendingValidatorTx [label=<<i>Tx out<br/>at spending validator<br/>which requires<br/>oracle choice</i>>];
+
+  SpendingValidatorTx [label=<
+    <TABLE CELLSPACING="0" CELLPADDING="4" border="1" CELLBORDER="0" style="rounded" color="#aaa">
+      <TR>
+        <TD colspan="2" align="center"><b>Tx consuming<br/>data point</b></TD>
+      </TR>
+      <TR>
+        <TD CELLPADDING="0">
+          <TABLE CELLSPACING="0" CELLPADDING="6" border="0" CELLBORDER="0">
+            <TR>
+              <TD border="1" align="left"><b>redeemer</b></TD>
+              <TD border="1" align="left" balign="left">oracle data at<br/>reference input</TD>
+            </TR>
+            <TR>
+              <TD collspan="2" align="center"> </TD>
+            </TR>
+          </TABLE>
+        </TD>
+      </TR>
+    </TABLE>
+  > color="#aaa" shape="plain"];
+
+  SpendingValidatorThreadPoint [shape=point];
+  SpendingValidatorTx -> SpendingValidatorThreadPoint;
+
+  DataPointOutputPoint -> SpendingValidatorTx [style="dashed" splines="ortho" label=<reference<br/>input> fontcolor="#888"];
+
+
+  AnotherSpendingValidatorInitialThreadPoint [shape=point];
+  AnotherSpendingValidatorInitialThreadPoint -> AnotherSpendingValidatorTx [label=<<i>Tx out<br/>at spending validator<br/>which requires<br/>oracle choice</i>>];
+
+  AnotherSpendingValidatorTx [label=<
+    <TABLE CELLSPACING="0" CELLPADDING="4" border="1" CELLBORDER="0" style="rounded" color="#aaa">
+      <TR>
+        <TD colspan="2" align="center"><b>Tx consuming<br/>data point</b></TD>
+      </TR>
+      <TR>
+        <TD CELLPADDING="0">
+          <TABLE CELLSPACING="0" CELLPADDING="6" border="0" CELLBORDER="0">
+            <TR>
+              <TD border="1" align="left"><b>redeemer</b></TD>
+              <TD border="1" align="left" balign="left">oracle data at<br/>reference input</TD>
+            </TR>
+            <TR>
+              <TD collspan="2" align="center"> </TD>
+            </TR>
+          </TABLE>
+        </TD>
+      </TR>
+    </TABLE>
+  > color="#aaa" shape="plain"];
+
+  AnotherSpendingValidatorThreadPoint [shape=point];
+  AnotherSpendingValidatorTx -> AnotherSpendingValidatorThreadPoint;
+
+  DataPointOutputPoint -> AnotherSpendingValidatorTx [style="dashed" splines="ortho" label=<reference<br/>input> fontcolor="#888"];
+}

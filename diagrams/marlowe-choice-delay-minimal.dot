@@ -1,0 +1,21 @@
+digraph MarloweChoiceDelayMinimal {
+  rankdir=LR;
+  graph [pad="0.5", nodesep="0.8", ranksep="1", splines="line"];
+  node [color="#aaa", shape=rect, style="filled, rounded", fillcolor="#f9f9f9", fontname="Courier New", fontsize="8pt"];
+  edge [tailport="e", headport="w", color="#aaa", fontname="Courier New", fontsize="8pt"];
+
+  OracleChoiceStep [label=<<b>WHEN CHOICE</b> <i>x</i> <b>BY</b> <i>oracle pubKeyHash</i>> ];
+
+  PayStep [label=<<b>PAY </b><i>fee</i> <b>TO</b> <i>oracle pubKeyHash</i>> ];
+
+  OracleChoiceStep -> PayStep;
+
+  DelayStep [label=<<b>WHEN TX_INTERVAL_START</b> &gt; <i>delay timestamp</i>> ];
+
+  PayStep -> DelayStep;
+
+  CloseStep [label=<<b>CLOSE</b>> ];
+
+  DelayStep -> CloseStep;
+
+}
