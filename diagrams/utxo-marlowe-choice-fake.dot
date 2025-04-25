@@ -1,8 +1,8 @@
 digraph Marlowe_Choice_Fake {
-  rankdir=LR;
+  rankdir=TD;
   graph [pad="0.5", nodesep="0.8", ranksep="1"];
   node [shape=rect, style="filled,rounded", fillcolor="#f9f9f9", fontname="Courier New", fontsize="8pt"];
-  edge [arrowhead=none, tailport="e", headport="w", color="#aaa", fontname="Courier New", fontsize="8pt"];
+  edge [arrowhead=none, tailport="s", headport="w", color="#aaa", fontname="Courier New", fontsize="8pt"];
 
   FundingOutput [shape=point];
 
@@ -67,10 +67,10 @@ digraph Marlowe_Choice_Fake {
 
 
 // digraph Marlowe_Choice_Fake {
-//   rankdir=LR;
+//   rankdir=TD;
 //   graph [pad="0.5", nodesep="0.8", ranksep="1"];
 //   node [shape="plain", style="filled", fillcolor="#e8e8e8", fontname="Courier New", fontsize="10pt"];
-//   edge [arrowhead=none, tailport="e", headport="w", color="#e8e8e8", penwidth="2", fontname="Courier New", fontsize="10pt"];
+//   edge [arrowhead=none, tailport="s", headport="w", color="#e8e8e8", penwidth="2", fontname="Courier New", fontsize="10pt"];
 // 
 //   Tx [label=<
 //     <TABLE CELLSPACING="0" CELLPADDING="4" BORDER="0" CELLBORDER="0" style="rounded" color="#fff">

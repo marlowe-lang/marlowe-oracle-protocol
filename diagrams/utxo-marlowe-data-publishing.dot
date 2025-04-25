@@ -1,8 +1,8 @@
 digraph Oracle_Choice_Referencing {
-  rankdir=LR;
+  rankdir=TD;
   graph [pad="0.5", nodesep="0.8", ranksep="1"];
   node [shape=rect, style="filled", fillcolor="#f9f9f9", fontname="Courier New", fontsize="8pt"];
-  edge [arrowhead=none, tailport="e", headport="w", color="#aaa", fontname="Courier New", fontsize="8pt"];
+  edge [arrowhead=none, tailport="s", headport="w", color="#aaa", fontname="Courier New", fontsize="8pt"];
 
   MarloweInitialThreadPoint [shape=point];
   MarloweInitialThreadPoint -> MarloweOracleRequestOutput;
