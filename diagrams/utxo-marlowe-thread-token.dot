@@ -2,7 +2,7 @@ digraph Marlowe_Proof_Of_Execution {
   rankdir=TD;
   graph [pad="0.5", nodesep="0.8", ranksep="1"];
   node [shape=rect, style="filled,rounded", fillcolor="#f9f9f9", fontname="Courier New", fontsize="8pt"];
-  edge [arrowhead=none, headport=w, tailport="s", color="#aaa", fontname="Courier New", fontsize="8pt"];
+  edge [arrowhead=none, headport="n", tailport="s", color="#aaa", fontname="Courier New", fontsize="8pt"];
 
   MintingFundingOutput [shape=point];
   MintingFundingOutput -> MintingTx [label=<<i>Tx funding</i>>];

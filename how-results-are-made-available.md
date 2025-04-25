@@ -4,11 +4,11 @@
 
 * Minimal Marlowe request - this request can not be really used by the other smart contracts. Data disappears from the chain in the same transaction when it is provided.
 
-  <img src="./diagrams/marlowe-request.svg" alt="Minimal Marlowe Request" style="width: 64%;margin: 4em 18%"/>
+  <img src="./diagrams/marlowe-request.svg" alt="Minimal Marlowe Request" width="30%" margin="0 auto" />
 
 * Marlowe request with enforced delay - by introducing the delay we have a guarantee that the data will be present on the chain for a particular amount of time.
 
-  <img src="./diagrams/marlowe-request-delay.svg" alt="Marlowe Request With Delay" style="width: 100%; margin: 4em 0"/>
+  <img src="./diagrams/marlowe-request-delay.svg" alt="Marlowe Request With Delay" style="width: 40%; margin: 4em 0"/>
 
 * Marlowe contract with a request - in this case we have a contract which could be useful on its own and implement some internal cash flows based on the oracle data and also we make the data point available for the other smart contracts.
 
@@ -18,11 +18,11 @@
 
 * UTxO data publishing and usage through reference inputs.
   
-  <img src="./diagrams/utxo-data-publishing.svg" alt="Data Publishing Using Reference Inputs" style="width: 100%; margin: 4em 0" />
+  <img src="./diagrams/utxo-data-publishing.svg" alt="Data Publishing Using Reference Inputs" style="width: 70%; margin: 4em 0" />
 
 * UTxO level overview of the Marlowe data publishing. This scheme extends the above with the preliminary data point request with subsequent guaranteed fee payout and with visible enforced delay on the contract level to make the data available.
   
-  <img src="./diagrams/utxo-marlowe-data-publishing.svg" alt="Data Publishing Using Reference Inputs" style="width: 100%; margin: 4em 0" />
+  <img src="./diagrams/utxo-marlowe-data-publishing.svg" alt="Data Publishing Using Reference Inputs" style="width: 80%; margin: 4em 0" />
   
   TODO:
     * Cleanup the data point usage script and redeemer - unify it with the above diagram?
@@ -33,16 +33,16 @@
 
 * On the UTxO level Marlowe validator ensure that the transaction which delivered the data was signed by appropriate signing key. After that step what is really accesible on the chain by the other contracts is the final UTxO.
   
-  <img src="./diagrams/utxo-marlowe-choice-verification.svg" alt="On-Chain Marlowe Choice Verification" style="width: 100%; margin: 4em 0" />
+  <img src="./diagrams/utxo-marlowe-choice-verification.svg" alt="On-Chain Marlowe Choice Verification" style="width: 60%; margin: 4em 0" />
 
 * On the UTxO it is possible to create an arbitrary output. Malicious actor Eve could fake previously presented output because the choice itself which is stored in the state is not signed by the oracle so she can actually "provide" an arbitrary data point.
   
-  <img src="./diagrams/utxo-marlowe-choice-fake.svg" alt="Eve Is Publishing Fake Marlowe Choice" style="width: 80%; margin: 4em 10%" />
+  <img src="./diagrams/utxo-marlowe-choice-fake.svg" alt="Eve Is Publishing Fake Marlowe Choice" style="width: 55%; margin: 4em 10%" />
 
 * Cardano ledger guarantees that tokens of a specific asset class value can be minted only by a script which hash equals to that class value. In other words token existence is a proof that a specific script was successfully executed. We can use this property and extend Marlowe validator so it can be used for preliminary minting - the minting policy will check if the choices map is initially empty.
   Marlowe spending validator will take care of the token so it never leaks the "execution thread" meaning that it is passed to the transaction output which is a continuation output of the Marlowe contract or it is burned if there is no continuation output.
   Given those assumptions we can conclude that tokens of "Marlowe asset class" will be only present as part of the correct Marlowe execution thread.
-  <img src="./diagrams/utxo-marlowe-thread-token.svg" alt="Thread Token Lifecycle" style="width: 100%; margin: 4em 0" />
+  <img src="./diagrams/utxo-marlowe-thread-token.svg" alt="Thread Token Lifecycle" style="width: 45%; margin: 4em 0" />
 
 
 ## How results are made available on-chain to other Cardano smart contracts, including information about the data source, format and rendering.

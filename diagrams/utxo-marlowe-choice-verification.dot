@@ -2,7 +2,7 @@ digraph Marlowe_Choice_Authenticity {
   rankdir=TD;
   graph [pad="0.5", nodesep="0.8", ranksep="1"];
   node [shape=rect, style="filled,rounded", fillcolor="#f9f9f9", fontname="Courier New", fontsize="8pt"];
-  edge [arrowhead=none, tailport="s", headport="w", color="#aaa", fontname="Courier New", fontsize="8pt"];
+  edge [arrowhead=none, tailport="s", headport="n", color="#aaa", fontname="Courier New", fontsize="8pt"];
 
   Tx [label=<
     <TABLE CELLSPACING="0" CELLPADDING="4" border="1" CELLBORDER="0" style="rounded" color="#aaa">
