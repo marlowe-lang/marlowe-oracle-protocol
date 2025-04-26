@@ -1,53 +1,33 @@
-### Diagrams
+## Data Availability
 
-#### Marlowe
+Let's build up first some minimal Marlowe contract request structure which makes it useful from the data sharing perspective. We will then move to the security aspect of the data sharing and later on we will dive into the specifics of the datum and the contract state which should be used by the external on-chain data consumers.
+Some elements of this scheme require slight extensions to the Marlowe validator and it's tooling. We will indicate those elements in the spec.
 
-* Minimal Marlowe request - this request can not be really used by the other smart contracts. Data disappears from the chain in the same transaction when it is provided.
+### Marlowe Oracle Request
+
+#### Minimal Marlowe Request
+
+As already discussed a minimal protocol request consists of a choice and payout. This structure gives oracle harvester the ability to easily detect requests on the chain together with guarantee of the reward.
 
   <img src="./diagrams/marlowe-request.svg" alt="Minimal Marlowe Request" width="30%" margin="0 auto" />
 
-* Marlowe request with enforced delay - by introducing the delay we have a guarantee that the data will be present on the chain for a particular amount of time.
+On its own this contract structure is not a reliable from the other data consumers point of view. Marlowe validator enforces removal of the contract UTxOs thread together with its the state and choices from the blockchain. For example if we consider the above contract alone data point will disappear from the chain together with transaction in which it is provided because we reach `Close` in that step so validator requires us to not output any Marlowe UTxO.
 
-  <img src="./diagrams/marlowe-request-delay.svg" alt="Marlowe Request With Delay" style="width: 40%; margin: 4em 0"/>
+#### Marlowe Oracle Request with Enforced Delay
 
-* Marlowe contract with a request - in this case we have a contract which could be useful on its own and implement some internal cash flows based on the oracle data and also we make the data point available for the other smart contracts.
+Marlowe provides ways to enforce suspension of the contract execution in a predictable way. The ability to delay contract execution can be used to provide guarantees for the consumers that the state information will be present on the chain for a certain amount of time.
+
+  <img src="./diagrams/marlowe-request-delay.svg" alt="Marlowe Request With Delay" style="width: 35%; margin: 4em 0"/>
+
+We propose to use this extra separate step as a basis for reliable data sharing. This step can follow the choice directly or be used as a further step in the contract following for example other choices and payouts. What is important is that the delay is unconditionally present on all the future execution paths.
 
   <img src="./diagrams/marlowe-request-thread-delay.svg" alt="Marlowe Contract With a Delay Before Close" style="width: 100%;margin: 4em 0"/>
 
-#### UTxO Level Publishing
+If use this protocol steps we can introduce a data point to a larger self contained Marlowe contract making it also useful for some other data consumers.
 
-* UTxO data publishing and usage through reference inputs.
-  
-  <img src="./diagrams/utxo-data-publishing.svg" alt="Data Publishing Using Reference Inputs" style="width: 70%; margin: 4em 0" />
+### UTxO Level Publishing
 
-* UTxO level overview of the Marlowe data publishing. This scheme extends the above with the preliminary data point request with subsequent guaranteed fee payout and with visible enforced delay on the contract level to make the data available.
-  
-  <img src="./diagrams/utxo-marlowe-data-publishing.svg" alt="Data Publishing Using Reference Inputs" style="width: 80%; margin: 4em 0" />
-  
-  TODO:
-    * Cleanup the data point usage script and redeemer - unify it with the above diagram?
-    * Make the Tx headers human friendly - drop the tx ids etc.
-    * Drop tx funding utxos?
-
-#### Authenticity Of The Data
-
-* On the UTxO level Marlowe validator ensure that the transaction which delivered the data was signed by appropriate signing key. After that step what is really accesible on the chain by the other contracts is the final UTxO.
-  
-  <img src="./diagrams/utxo-marlowe-choice-verification.svg" alt="On-Chain Marlowe Choice Verification" style="width: 60%; margin: 4em 0" />
-
-* On the UTxO it is possible to create an arbitrary output. Malicious actor Eve could fake previously presented output because the choice itself which is stored in the state is not signed by the oracle so she can actually "provide" an arbitrary data point.
-  
-  <img src="./diagrams/utxo-marlowe-choice-fake.svg" alt="Eve Is Publishing Fake Marlowe Choice" style="width: 55%; margin: 4em 10%" />
-
-* Cardano ledger guarantees that tokens of a specific asset class value can be minted only by a script which hash equals to that class value. In other words token existence is a proof that a specific script was successfully executed. We can use this property and extend Marlowe validator so it can be used for preliminary minting - the minting policy will check if the choices map is initially empty.
-  Marlowe spending validator will take care of the token so it never leaks the "execution thread" meaning that it is passed to the transaction output which is a continuation output of the Marlowe contract or it is burned if there is no continuation output.
-  Given those assumptions we can conclude that tokens of "Marlowe asset class" will be only present as part of the correct Marlowe execution thread.
-  <img src="./diagrams/utxo-marlowe-thread-token.svg" alt="Thread Token Lifecycle" style="width: 45%; margin: 4em 0" />
-
-
-## How results are made available on-chain to other Cardano smart contracts, including information about the data source, format and rendering.
-
-### Reference Inputs And Oracle Data Sharing
+#### Reference Inputs And Oracle Data Sharing
 
 * Cardano provides a way to reference UTxO without consuming by including it in reference inputs set of the transaction. Through this mechanism cross smart contract communication and data sharing is possible.
 
@@ -61,20 +41,42 @@
 
 ![Data Publishing](./diagrams/oracle-publishing.svg)
 
-### Marlowe Oracle Request And Data Availability
+* UTxO data publishing and usage through reference inputs.
+  
+  <img src="./diagrams/utxo-data-publishing.svg" alt="Data Publishing Using Reference Inputs" style="width: 70%; margin: 4em 0" />
 
-* In the case of Marlowe the oracle data point is delivered as a part of Marlowe contract. That specific request can be of course part of a larger Marlowe contract which requests more data points (from different oracles) or even uses that information in its internal logic to drive the cash flows.
+* UTxO level overview of the Marlowe data publishing. This scheme extends the above with the preliminary data point request with subsequent guaranteed fee payout and with visible enforced delay on the contract level to make the data available.
+  
+  <img src="./diagrams/utxo-marlowe-data-publishing.svg" alt="Data Publishing Using Reference Inputs" style="width: 80%; margin: 4em 0" />
+  
+#### Authenticity Of The Data
 
-* Marlowe provides ways to enforce suspension of the contract execution in a predictable way. The ability to delay contract can be used to provide guarantees that the contract state information will be present on the chain for a certain amount of time.
+* On the UTxO level Marlowe validator ensures that the transaction which delivers the choice value was signed by a key corresponding to the party from the contract. After that step in the Marlowe UTxO that choice together with the party information and value is kept in a map. This map can accessed by other contracts.
+  
+  <img src="./diagrams/utxo-marlowe-choice-verification.svg" alt="On-Chain Marlowe Choice Verification" style="width: 60%; margin: 4em 0" />
+
+* On the UTxO it is possible to create an arbitrary output. Malicious actor Eve could fake previously presented output because the choice itself which is stored in the state is not signed by the oracle so she can actually "provide" an arbitrary data point.
+  
+  <img src="./diagrams/utxo-marlowe-choice-fake.svg" alt="Eve Is Publishing Fake Marlowe Choice" style="width: 55%; margin: 4em 10%" />
+
+* Cardano ledger guarantees that tokens of a specific asset class value can be minted only by a script which hash equals to that class value. In other words token existence is a proof that a specific script was successfully executed. We can use this property and extend Marlowe validator so it can be used for preliminary minting - the minting policy will check if the choices map is initially empty.
+  Marlowe spending validator will take care of the token so it never leaks the "execution thread" meaning that it is passed to the transaction output which is a continuation output of the Marlowe contract or it is burned if there is no continuation output.
+  Given those assumptions we can conclude that tokens of "Marlowe asset class" will be only present as part of the correct Marlowe execution thread.
+  <img src="./diagrams/utxo-marlowe-thread-token.svg" alt="Thread Token Lifecycle" style="width: 45%; margin: 4em 0" />
+
 
 * Our proposal can Marlowe stores choices and possibly derived values in the state of the contract which is kept in the datum.
-
-![Data Sharing](./diagrams/marlowe-data-sharing.svg)
 
 * Internally Marlowe itself can express more complex oracle(s) interactions (multi-response averaging, `n of m` checks etc.) to fulfil a specific contract's needs but even in such cases the original oracle choices are present in the state of the contract.
 
 In this spec we describe basic data point sharing which is Marlowe contract logic agnostic. This scheme gives opportunity to use the oracle data in other contracts in a fully trustless way.
-Some elements of this scheme require slight extensions to the Marlowe validator and it's tooling. We will indicate those elements in the spec.
+
+
+---
+
+## Notes and TODO
+
+## How results are made available on-chain to other Cardano smart contracts, including information about the data source, format and rendering.
 
 ### Trustless data sharing
 
@@ -129,5 +131,10 @@ Brainstorm:
 
 ## Marlowe Plutus `data` Encoding
 
-
+## TODO:
+  * **UTxO level diagram**:
+    * Clean up the data point usage script and redeemer - unify it with the above diagram?
+    * Make the Tx headers human friendly - drop the tx ids and use readable names
+    * Drop margins from the UTxO level diagrams.
+  * Drop tx funding utxos?
 
