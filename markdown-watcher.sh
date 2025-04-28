@@ -10,7 +10,7 @@ inotifywait -m -e modify --quiet --format '%w%f' --include '.*\.md$' . | while r
     pandoc --standalone \
       --from=gfm --to=html \
       -c github-markdown.css \
-      $mdfile -o "$htmlfile"
+      "$mdfile" -o "$htmlfile"
     echo "Generated $htmlfile"
     # Open (or bring to front) only that single SVG
     firefox "$htmlfile" &
