@@ -21,129 +21,283 @@
       vertical-align: middle;
     }
     .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+    /* CSS for syntax highlighting */
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
   </style>
   <link rel="stylesheet" href="github-markdown.css" />
 </head>
 <body>
 <h2 id="data-availability">Data Availability</h2>
-<p>Let's build up first some minimal Marlowe contract request structure
-which makes it useful from the data sharing perspective. We will then
+<p>Let's build up a minimal Marlowe contract request structure first.
+The goal is to make it useful in the data sharing context. We will then
 move to the security aspect of the data sharing and later on we will
 dive into the specifics of the datum and the contract state which should
 be used by the external on-chain data consumers. Some elements of this
-scheme require slight extensions to the Marlowe validator and it's
-tooling. We will indicate those elements in the spec.</p>
+scheme require slight extensions to the current Marlowe validator (but
+not the Language) and its tooling. We will indicate those elements in
+the spec.</p>
 <h3 id="marlowe-oracle-request">Marlowe Oracle Request</h3>
 <h4 id="minimal-marlowe-request">Minimal Marlowe Request</h4>
-<p>As already discussed a minimal protocol request consists of a choice
-and payout. This structure gives oracle harvester the ability to easily
-detect requests on the chain together with guarantee of the reward.</p>
-  <img src="./diagrams/marlowe-request.svg" alt="Minimal Marlowe Request" width="30%" margin="0 auto" />
+<p>As already discussed a minimal protocol request consists of two
+constructs a <code>Choice</code> and a <code>Payout</code>. This
+structure provides oracle harvester ability to easily detect requests on
+the chain together with a guarantee of the reward payment.</p>
+  <img src="./diagrams/marlowe-request.svg" alt="Minimal Marlowe Request" style="width: 30%" />
 
 <p>On its own this contract structure is not a reliable from the other
 data consumers point of view. Marlowe validator enforces removal of the
-contract UTxOs thread together with its the state and choices from the
-blockchain. For example if we consider the above contract alone data
-point will disappear from the chain together with transaction in which
-it is provided because we reach <code>Close</code> in that step so
-validator requires us to not output any Marlowe UTxO.</p>
+contract thread UTxO together with the state and choices from the
+blockchain when a contract reaches its execution end. For example if we
+consider the above contract alone the data point will disappear from the
+chain together with transaction in which it is provided. We just reach
+the <code>Close</code> step together with the <code>Choice</code> and
+<code>Pay</code> in the same on-chain transaction - <code>Pay</code> and
+<code>Close</code> are evaluated "eagerly" after the <code>Choice</code>
+suspension point (they are not suspension points on themselves).</p>
 <h4 id="marlowe-oracle-request-with-enforced-delay">Marlowe Oracle
 Request with Enforced Delay</h4>
-<p>Marlowe provides ways to enforce suspension of the contract execution
-in a predictable way. The ability to delay contract execution can be
-used to provide guarantees for the consumers that the state information
-will be present on the chain for a certain amount of time.</p>
+<p>Marlowe provides ways to enforce a delay of the contract execution in
+a predictable way. The ability to suspend contract can be used to
+provide guarantees for the consumers that the contract state will be
+present on the chain for a certain amount of time.</p>
   <img src="./diagrams/marlowe-request-delay.svg" alt="Marlowe Request With Delay" style="width: 35%; margin: 4em 0"/>
 
-<p>We propose to use this extra separate step as a basis for reliable
-data sharing. This step can follow the choice directly or be used as a
-further step in the contract following for example other choices and
-payouts. What is important is that the delay is unconditionally present
-on all the future execution paths.</p>
-  <img src="./diagrams/marlowe-request-thread-delay.svg" alt="Marlowe Contract With a Delay Before Close" style="width: 100%;margin: 4em 0"/>
+<p>We propose to use this extra separate step as a basis of a reliable
+data sharing protocol. This step can follow a <code>Choice</code> and
+<code>Pay</code> steps directly or be used as some future step in the
+contract following them. What is important is that the delay is
+unconditionally present on all the following execution paths. An
+important detail is that all possible timeouts present int the contract
+are adjusted accordingly. The one which relates to the oracle
+<code>Choice</code> step should be appropriately distanced from the
+final delay so the overall interval during which the data are available
+on the chain is fully specified. Additionally all the timeouts in the
+following contract which precede the delay step should be larger then
+the its expected deadline.</p>
+  <img src="./diagrams/marlowe-request-thread-delay.svg" alt="Marlowe Contract With a Delay Before Close" style="width: 100%"/>
 
-<p>If use this protocol steps we can introduce a data point to a larger
-self contained Marlowe contract making it also useful for some other
-data consumers.</p>
 <h3 id="utxo-level-publishing">UTxO Level Publishing</h3>
 <h4 id="reference-inputs-and-oracle-data-sharing">Reference Inputs And
 Oracle Data Sharing</h4>
-<ul>
-<li><p>Cardano provides a way to reference UTxO without consuming by
-including it in reference inputs set of the transaction. Through this
-mechanism cross smart contract communication and data sharing is
-possible.</p></li>
-<li><p>Referenced inputs are part of the transaction which can be
-inspected by the transaction validators. Smart contract can inspect
-referenced UTxO - read its datum, value or check the output address
-without consuming the other contract input.</p></li>
-<li><p>This mechanism is used by existing oracle provides on Cardano and
+<p>Cardano provides a way to "use" UTxO in a transaction without
+consuming it. It is enough to add such a UTxO to the reference input set
+of a transaction. Through this mechanism cross smart contract
+communication and data sharing is possible. It does not involve direct
+interaction with the smart contract which possibly sits at the
+referenced UTxO level (the UTxO can be also a regular address based one)
+- this script is not executed when an input is referenced. On the other
+hand validators involved in the transaction which references a
+particular input can inspect it - read its datum, value or check the
+output address without consuming the other contract input.</p>
+<p>This mechanism is used by existing oracle provides on Cardano and
 enables access to a published data point. Data points are usually
-approved directly using an oracle signature under a data point
-structure.</p></li>
-<li><p>The published value can be accessed up until the oracle UTxO is
-consumed. Accessibility of the value can be critical to dependent on it
-contracts and this aspect can be resolved on the extra layer of logic
-possibly implemented by validator which resides on a specific UTxO.
-There seem to be no standard which is respected across different oracles
-which can be used for that aspect.</p></li>
-<li><p>The publishing strategy does not directly provide a way to
-enforce payment in exchange for the access to the information. In many
-cases publishing is driven by an off-chain protocols and payments
-specific to an oracle.</p></li>
-</ul>
-<p><img src="./diagrams/oracle-publishing.svg"
-alt="Data Publishing" /></p>
-<ul>
-<li><p>UTxO data publishing and usage through reference inputs.</p>
-<img src="./diagrams/utxo-data-publishing.svg" alt="Data Publishing Using Reference Inputs" style="width: 70%; margin: 4em 0" />
-</li>
-<li><p>UTxO level overview of the Marlowe data publishing. This scheme
-extends the above with the preliminary data point request with
-subsequent guaranteed fee payout and with visible enforced delay on the
-contract level to make the data available.</p>
-<img src="./diagrams/utxo-marlowe-data-publishing.svg" alt="Data Publishing Using Reference Inputs" style="width: 80%; margin: 4em 0" />
-</li>
-</ul>
+approved using an oracle signature under a data point structure and this
+tuple is included in a UTxO.</p>
+<blockquote>
+<p><strong>FIXME</strong>: check/consult this point with the Charlie3
+and Orcfax docs.</p>
+</blockquote>
+  <img src="./diagrams/utxo-data-publishing.svg" alt="Data Publishing Using Reference Inputs" style="width: 55%" />
+
+<p>As discussed previously data point is visible on chain as long as the
+UTxO is not consumed. There seem to be no standard cross oracle standard
+regarding those aspects of the protocols. Signed data points provide a
+bit more flexibility as they separate publisher from the data provider
+and possibly can be republish by anybody on the chain. Of course the
+described publishing strategy on its own does not directly provide a way
+to enforce payment in exchange for the access to the information. In
+many cases publishing is driven by an up front payment through off-chain
+channels and is specific to the oracle provider. Some oracles also
+publish some data for free rather regularly.</p>
+<h4 id="marlowe-based-data-publishing">Marlowe Based Data
+Publishing</h4>
+<p>Let's look at the UTxO level overview of the Marlowe data publishing
+process. Marlowe extends the above flow with a preliminary data point
+request and subsequent reward payout for the oracle. It can optionally
+include enforced delay on the contract level to also become a data feed
+for some other consumers.</p>
+<img src="./diagrams/utxo-marlowe-data-publishing.svg" alt="Data Publishing Using Reference Inputs" style="width: 60%" />
+
+<p>At the end the data are provided to the consumers through the datum
+in similar fashion to the publishing feeds but they won't include any
+extra signature so authenticity of the data has to be proven using some
+other means which we discuss below.</p>
+<h4 id="cross-marlowe-choice-sharing">Cross-Marlowe Choice Sharing</h4>
+<blockquote>
+<p><strong>FIXME</strong>: Should we drop this section and move it to a
+separate MIP and discussion page?</p>
+</blockquote>
+<p>In the current version of the Marlowe validator it is impossible to
+use choice value from the other instance of Marlowe. We could imagine
+that on the validator level choice value is read from another Marlowe
+contract UTxOs as described above but in such a case the choice name
+which is used to identify that choice should uniquely identify the query
+in a cross-contract fashion. This is exactly the nature of oracle
+choices described in this document. It seems that in order to properly
+implement such a feature we should introduce to the language itself a
+notion of a <code>ChoiceId</code> which is "globally" unique. To do so
+we probably have to introduce <code>ChoiceName</code> to the
+language:</p>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">ChoiceName</span> <span class="ot">=</span> <span class="dt">LocalChoiceName</span> <span class="dt">String</span> <span class="op">|</span> <span class="dt">GloballyUniqueChoiceName</span> <span class="dt">String</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">ChoiceId</span> <span class="ot">=</span> <span class="dt">ChoiceId</span> <span class="dt">ChoiceName</span> <span class="dt">Party</span></span></code></pre></div>
 <h4 id="authenticity-of-the-data">Authenticity Of The Data</h4>
-<ul>
-<li><p>On the UTxO level Marlowe validator ensures that the transaction
+<h5 id="forging-marlowe-choice">Forging Marlowe Choice</h5>
+<p>On the UTxO level Marlowe validator ensures that the transaction
 which delivers the choice value was signed by a key corresponding to the
-party from the contract. After that step in the Marlowe UTxO that choice
-together with the party information and value is kept in a map. This map
-can accessed by other contracts.</p>
-<img src="./diagrams/utxo-marlowe-choice-verification.svg" alt="On-Chain Marlowe Choice Verification" style="width: 60%; margin: 4em 0" />
-</li>
-<li><p>On the UTxO it is possible to create an arbitrary output.
-Malicious actor Eve could fake previously presented output because the
-choice itself which is stored in the state is not signed by the oracle
-so she can actually "provide" an arbitrary data point.</p>
-<img src="./diagrams/utxo-marlowe-choice-fake.svg" alt="Eve Is Publishing Fake Marlowe Choice" style="width: 55%; margin: 4em 10%" />
-</li>
-<li><p>Cardano ledger guarantees that tokens of a specific asset class
-value can be minted only by a script which hash equals to that class
-value. In other words token existence is a proof that a specific script
-was successfully executed. We can use this property and extend Marlowe
-validator so it can be used for preliminary minting - the minting policy
-will check if the choices map is initially empty. Marlowe spending
-validator will take care of the token so it never leaks the "execution
-thread" meaning that it is passed to the transaction output which is a
-continuation output of the Marlowe contract or it is burned if there is
-no continuation output. Given those assumptions we can conclude that
-tokens of "Marlowe asset class" will be only present as part of the
-correct Marlowe execution thread.
-<img src="./diagrams/utxo-marlowe-thread-token.svg" alt="Thread Token Lifecycle" style="width: 45%; margin: 4em 0" /></p></li>
-<li><p>Our proposal can Marlowe stores choices and possibly derived
-values in the state of the contract which is kept in the datum.</p></li>
-<li><p>Internally Marlowe itself can express more complex oracle(s)
-interactions (multi-response averaging, <code>n of m</code> checks etc.)
-to fulfil a specific contract's needs but even in such cases the
-original oracle choices are present in the state of the
-contract.</p></li>
+party from the contract. After that step every Marlowe thread UTxO
+protects and keeps that choice together with the party information and
+value in a map in the datum.</p>
+  <img src="./diagrams/utxo-marlowe-choice-verification.svg" alt="On-Chain Marlowe Choice Verification" style="width: 45%" />
+
+<p>Even though Marlowe validator manages that information carefully so
+it is copied from the inputs to the transaction outputs we can not
+really be sure that the original information was actually verified in
+the first place. On the Cardano blockchain it is possible to create an
+arbitrary output. Malicious actor Eve could easily fake previously
+presented output just by publishing a transaction with precisely crafted
+output:</p>
+  <img src="./diagrams/utxo-marlowe-choice-fake.svg" alt="Eve Is Publishing Fake Marlowe Choice" style="width: 45%" />
+
+<p>The above scheme is possible because the transaction which Eve
+constructed does not involve Marlowe validator execution at all!
+Additionally the choice itself which is stored in the datum is not
+paired with the data provider signature so she can actually create an
+arbitrary data point and pair it with arbitrary <code>Party</code>
+(represented by public key hash in our case).</p>
+<h5 id="thread-token">Thread Token</h5>
+<p>In order to fix the above problem we could significantly change the
+validator and require an extra signature to be provided and stored
+together with the data point.</p>
+<blockquote>
+<p><strong>FIXME</strong>: Optional comment: There is a MIP which
+proposes introduction of "Signed Choices" but even with this extension
+we don't plan to store the actual signatures in the Marlowe state. The
+authenticity of the value will be again implied by the execution
+itself.</p>
+</blockquote>
+<p>Another option is to introduce a data verification step execution
+proof. If we could prove that the choice which is stored in the contract
+state was actually verified by Marlowe validator in some previous
+transaction then any consumer could trust the data without checking the
+transaction history which is impossible to perform on-chain. In order to
+do so we can use the concept of a <code>thread token</code> coupled
+together with preconditions checking.</p>
+<p>Cardano ledger guarantees that tokens of a specific asset class can
+be minted only by a script which hashes to that asset class value. In
+other words token existence is a proof that a specific script was
+successfully executed in some past transaction. Thanks to <a
+href="https://github.com/cardano-foundation/CIPs/tree/master/CIP-0069">CIP-0069</a>
+we can use a single script to validate minting and spending which is
+really convenient - we can have a single script and token identifier
+which when present together on a UTxO can indicate a valid thread of
+execution. The essence of the thread token pattern flow is captured in
+the diagram below:</p>
+  <img src="./diagrams/utxo-thread-token.svg" alt="Thread Token Lifecycle" style="width: 31%" />
+
+<p>The final scheme consists of three properties of the script which
+implements it:</p>
+<ul>
+<li><p>The script should allow minting a single unique token only if it
+is outputted to a UTxO where spending validator has the same hash as its
+own.</p></li>
+<li><p>The script when validating spending should check if the token of
+its own currency is passed to the output which contains the same
+spending validator.</p></li>
+<li><p>Additionally the script should allow burning on both spending and
+minting levels when there is no continuing execution thread
+output.</p></li>
 </ul>
-<p>In this spec we describe basic data point sharing which is Marlowe
-contract logic agnostic. This scheme gives opportunity to use the oracle
-data in other contracts in a fully trustless way.</p>
+<h4 id="thread-token-as-a-proof-of-marlowe-execution">Thread Token as a
+Proof Of Marlowe Execution</h4>
+<p>The pattern described above when introduced to the current Marlowe
+validator together with an additional precondition checking could be a
+basis for a reliable data authenticity verification scheme. The
+precondition which should be check during the initial minting in this
+case is that the initial choice map in the Marlowe state is empty. Given
+this initial check we can imply that:</p>
+<ul>
+<li><p>Marlowe token is only present at a UTxO if the initial
+precondition was checked because Marlowe never leaks the thread token,
+burns it at the end and performs the actual check during
+minting.</p></li>
+<li><p>Given some choice in the Marlowe state at the Marlowe UTxO which
+contains the thread token we can be sure that the choice verification
+step was executed because the initial state was checked and was
+empty.</p>
+<img src="./diagrams/utxo-marlowe-thread-token.svg" alt="Thread Token Lifecycle" style="width: 48%" />
+</li>
+</ul>
+<p>Please note that we can ignore the exact thread identifier - it can
+be useful in some context but the scheme allows us to trust choices
+stored in the Marlowe state relying on a single Marlowe validator hash
+which should be reflected on the spending validator level and the thread
+token as well. Additionally this trust scheme is Marlowe contract
+agnostic really. It can be used outside of the Marlowe Oracle Protocol
+context!</p>
+<h4 id="marlowe-datum-encoding">Marlowe Datum Encoding</h4>
 <hr />
 <h2 id="notes-and-todo">Notes and TODO</h2>
 <h2
