@@ -1,0 +1,171 @@
+digraph Thread_Token {
+  rankdir=TD;
+  graph [pad="0.02", nodesep="0.6", ranksep="0.5"];
+  node [shape=rect, style="filled,rounded", fillcolor="#f9f9f9", fontname="Courier New", fontsize="10"];
+  edge [arrowhead=none, headport="n", tailport="s", color="#aaa", fontname="Courier New", fontsize="10"];
+
+  MintingFundingOutput [shape=point];
+  MintingFundingOutput -> MintingTx [label=<<i>Tx funding</i>>];
+
+  MintingTx [label=<
+    <TABLE CELLSPACING="0" CELLPADDING="4" BORDER="1" CELLBORDER="0" style="rounded" color="#aaa">
+      <TR>
+        <TD colspan="2" align="center"><b>Tx With</b><br/><b>Thread Token Minting</b><br/><b>And</b><br/><b>Thread Initialization</b></TD>
+      </TR>
+      <TR>
+        <TD CELLPADDING="0">
+          <TABLE CELLSPACING="0" CELLPADDING="4" BORDER="0" CELLBORDER="0">
+            <TR>
+              <TD BORDER="1" align="center"><b>mints</b></TD>
+              <TD BORDER="1">
+                <TABLE CELLSPACING="0" CELLPADDING="4" BORDER="0" CELLBORDER="0">
+                  <TR>
+                    <TD align="left"><b>currency</b></TD>
+                    <TD align="left" balign="left">Script X</TD>
+                  </TR>
+                  <TR>
+                    <TD align="left"><b>token</b></TD>
+                    <TD align="left" balign="left">Thread Y</TD>
+                  </TR>
+                  <TR>
+                    <TD align="left"><b>amount</b></TD>
+                    <TD align="left" balign="left">1</TD>
+                  </TR>
+                </TABLE>
+              </TD>
+            </TR>
+            <TR>
+              <TD collspan="2" align="center"> </TD>
+            </TR>
+          </TABLE>
+        </TD>
+      </TR>
+    </TABLE>
+  > color="#aaa" shape="plain"];
+
+
+  InitialScriptOutput [label=<
+    <TABLE CELLSPACING="0" CELLPADDING="4" BORDER="0" CELLBORDER="1" style="rounded" color="#aaa">
+      <TR>
+        <TD colspan="2" align="center"><b>Initial Script Thread Output</b></TD>
+      </TR>
+      <TR>
+        <TD align="left"><b>address</b></TD>
+        <TD>Script X</TD>
+      </TR>
+      <TR>
+        <TD align="left"><b>value</b></TD>
+        <TD align="left" balign="left">
+          <TABLE CELLSPACING="0" CELLPADDING="4" BORDER="0" CELLBORDER="0" style="rounded" color="#aaa">
+            <TR>
+              <TD align="left"><b>currency</b></TD>
+              <TD align="left" balign="left">Script X</TD>
+            </TR>
+            <TR>
+              <TD align="left"><b>token</b></TD>
+              <TD align="left" balign="left">Thread Y</TD>
+            </TR>
+            <TR>
+              <TD align="left"><b>amount</b></TD>
+              <TD align="left" balign="left">1</TD>
+            </TR>
+          </TABLE>
+        </TD>
+      </TR>
+      </TABLE>
+  > shape="plain" border="1" color="#000"]
+
+  MintingChangeOutput [shape=point];
+  MintingTx -> MintingChangeOutput [label=<<i>Tx change</i>>];
+  MintingTx -> InitialScriptOutput;
+
+  InitialScriptOutput -> ScriptThread;
+
+  ScriptThreadExtraInput [shape=point];
+  ScriptThreadExtraInput -> ScriptThread;
+
+  ScriptThread [shape=circle, style="dashed,rounded", color="#aaa" fillcolor="white", fontname="Helvetica", margin="0", padding="0",
+    label=<<i>Script X Execution Thread…</i><br/><br/> --█--█--█--█--█--█--█--<br/><br/>Script X <b>should</b> keep track<br/>of the thread token<br/>and never lose it.>];
+
+  ScriptThreadOutput [label=<
+    <TABLE CELLSPACING="0" CELLPADDING="4" BORDER="0" CELLBORDER="1" style="rounded" color="#aaa">
+      <TR>
+        <TD colspan="2" align="center"><b>Final Script Thread Output</b></TD>
+      </TR>
+      <TR>
+        <TD align="left"><b>address</b></TD>
+        <TD>Script X</TD>
+      </TR>
+      <TR>
+        <TD align="left"><b>value</b></TD>
+        <TD align="left" balign="left">
+          <TABLE CELLSPACING="0" CELLPADDING="4" BORDER="0" CELLBORDER="0" style="rounded" color="#aaa">
+            <TR>
+              <TD align="left"><b>currency</b></TD>
+              <TD align="left" balign="left">Script X</TD>
+            </TR>
+            <TR>
+              <TD align="left"><b>token</b></TD>
+              <TD align="left" balign="left">Thread Y</TD>
+            </TR>
+            <TR>
+              <TD align="left"><b>amount</b></TD>
+              <TD align="left" balign="left">1</TD>
+            </TR>
+          </TABLE>
+        </TD>
+      </TR>
+      </TABLE>
+  > shape="plain" border="1" color="#000"]
+
+  ScriptThread -> ScriptThreadOutput;
+
+  ScriptThreadExtraOutput [shape=point];
+  ScriptThread -> ScriptThreadExtraOutput;
+
+  TxClosing [label=<
+    <TABLE CELLSPACING="0" CELLPADDING="4" BORDER="1" CELLBORDER="0" style="rounded" color="#aaa">
+      <TR>
+        <TD colspan="2" align="center"><b>Thread Token Burning Tx</b></TD>
+      </TR>
+      <TR>
+        <TD CELLPADDING="0">
+          <TABLE CELLSPACING="0" CELLPADDING="4" BORDER="0" CELLBORDER="0">
+            <TR>
+              <TD BORDER="1" align="center"><b>burns</b></TD>
+              <TD BORDER="1">
+                <TABLE CELLSPACING="0" CELLPADDING="4" BORDER="0" CELLBORDER="0">
+                  <TR>
+                    <TD align="left"><b>currency</b></TD>
+                    <TD align="left" balign="left">Script X</TD>
+                  </TR>
+                  <TR>
+                    <TD align="left"><b>token</b></TD>
+                    <TD align="left" balign="left">Thread Y</TD>
+                  </TR>
+                  <TR>
+                    <TD align="left"><b>amount</b></TD>
+                    <TD align="left" balign="left">1</TD>
+                  </TR>
+                </TABLE>
+              </TD>
+            </TR>
+            <TR>
+              <TD collspan="2" align="center"> </TD>
+            </TR>
+          </TABLE>
+        </TD>
+      </TR>
+    </TABLE>
+  > color="#aaa" shape="plain"];
+
+  CloseFundingOutput [shape=point];
+
+  CloseFundingOutput -> TxClosing;
+
+  ScriptThreadOutput -> TxClosing;
+
+  CloseOutput1 [shape=point];
+
+  TxClosing -> CloseOutput1;
+}
