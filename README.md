@@ -2,9 +2,14 @@
 
 In this repo we track the development and discussion around the oracle protocol:
 
+
 * The CIP document versions which are the side effects of this effort can be found in the [./CIP XXX Marlowe Oracle Protocol](./CIP%20XXX%20Marlowe%20Oracle%20Protocol) directory.
 
 ## Development Flow
+=======
+<!--
+* The CIP which is one of the side effects of this effort can be found in the [CIP XXX Marlowe Oracle Protocol.md](./CIP%20XXX%20Marlowe%20Oracle%20Protocol.md) file.
+-->
 
 ### Working on The CIP document
 
@@ -15,4 +20,7 @@ In this repo we track the development and discussion around the oracle protocol:
   $ cd ./CIP\ XXX\ Marlowe\ Oracle\ Protocol
   $ ./markdown-watcher.sh
   ```
+  
+* Some files and simple scripts are present here to ease the development process:
+
 
