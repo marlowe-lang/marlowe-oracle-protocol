@@ -1,0 +1,233 @@
+digraph Script_Execution_Thread {
+  rankdir=TD;
+  graph [pad="0.02", nodesep="0.6", ranksep="0.5"];
+  node [shape=rect, style="filled,rounded", fillcolor="#f9f9f9", fontname="Courier New", fontsize="10"];
+  edge [arrowhead=none, headport="n", tailport="s", color="#aaa", fontname="Courier New", fontsize="10"];
+
+  // --- Diagram 1: First Step ---
+  subgraph cluster_D1 {
+    label = "Thread Initialization";
+    style="dashed";
+    node [shape=rect, style="filled,rounded", fillcolor="#f9f9f9", fontname="Courier New", fontsize="10"];
+    edge [arrowhead=none, headport="n", tailport="s", color="#aaa", fontname="Courier New", fontsize="10"];
+
+    D1_InitFundingOutput [shape=point];
+
+    D1_InitFundingOutput -> D1_InitTx;
+
+    D1_InitTx [label=<
+      <TABLE CELLSPACING="0" CELLPADDING="4" BORDER="1" CELLBORDER="0" style="rounded" color="#aaa">
+        <TR>
+          <TD colspan="2" align="center"><b>Initial Thread Tx</b></TD>
+        </TR>
+        <TR>
+          <TD align="left">Script UTxO is initialized<br/>but the spending script is not executed</TD>
+        </TR>
+      </TABLE>
+    > color="#aaa" shape="plain"];
+
+    D1_InitialScriptOutput [label=<
+      <TABLE CELLSPACING="0" CELLPADDING="4" BORDER="0" CELLBORDER="1" style="rounded" color="#aaa">
+        <TR>
+          <TD colspan="2" align="center"><b>Initial Script Thread Output</b></TD>
+        </TR>
+        <TR>
+          <TD align="left"><b>address</b></TD>
+          <TD>Script X</TD>
+        </TR>
+        <TR>
+          <TD align="left"><b>datum</b></TD>
+          <TD align="left" balign="left">Initial script state</TD>
+        </TR>
+        </TABLE>
+    > shape="plain" border="1" color="#000"]
+
+    D1_InitChangeOutput [shape=point];
+    D1_InitTx -> D1_InitChangeOutput;
+    D1_InitTx -> D1_InitialScriptOutput;
+
+  }
+
+  D1_InitialScriptOutput -> D2_ScriptThreadTx1;
+
+  // --- Diagram 2: Thread Continues ---
+  subgraph cluster_D2 {
+    label = "Thread Execution";
+    labelloc=top;
+    style="dashed";
+    node [shape=rect, style="filled,rounded", fillcolor="#f9f9f9", fontname="Courier New", fontsize="10"];
+    edge [arrowhead=none, headport="n", tailport="s", color="#aaa", fontname="Courier New", fontsize="10"];
+
+    D2_ScriptThreadTx1 [label=<
+      <TABLE CELLSPACING="0" CELLPADDING="4" BORDER="1" CELLBORDER="0" style="rounded" color="#aaa">
+        <TR>
+          <TD align="center"><b>First Script Thread Tx</b></TD>
+        </TR>
+        <TR>
+          <TD cellpadding="0" align="left">
+            <TABLE CELLSPACING="0" CELLPADDING="4" BORDER="0" CELLBORDER="1" style="rounded" color="#aaa">
+              <TR>
+                <TD align="left" colspan="2">Script X is executed.<br/>It checks for a <b>single and correct</b> thread output.</TD>
+              </TR>
+              <TR>
+                <TD align="left"><b>redeemer</b></TD>
+                <TD align="left" balign="left">Action Y</TD>
+              </TR>
+            </TABLE>
+          </TD>
+        </TR>
+        <TR>
+          <TD align="left"> </TD>
+        </TR>
+      </TABLE>
+    > color="#aaa" shape="plain"];
+
+    D2_ScriptThreadTx1ExtraInput1 [shape=point];
+    D2_ScriptThreadTx1ExtraInput1 -> D2_ScriptThreadTx1;
+
+    D2_ScriptThreadTx1ExtraInput2 [shape=point];
+    D2_ScriptThreadTx1ExtraInput2 -> D2_ScriptThreadTx1;
+
+    D2_ScriptThreadTx1ExtraInput3 [shape=point];
+    D2_ScriptThreadTx1ExtraInput3 -> D2_ScriptThreadTx1;
+
+    D2_ScriptThreadTx1Output [label=<
+      <TABLE CELLSPACING="0" CELLPADDING="4" BORDER="0" CELLBORDER="1" style="rounded" color="#aaa">
+        <TR>
+          <TD colspan="2" align="center"><b>Script Thread Output 1</b></TD>
+        </TR>
+        <TR>
+          <TD align="left"><b>address</b></TD>
+          <TD align="left" balign="left">Script X</TD>
+        </TR>
+        <TR>
+          <TD align="left"><b>datum</b></TD>
+          <TD align="left" balign="left">Script state after<br />Action Y</TD>
+        </TR>
+      </TABLE>
+    > shape="plain" border="1" color="#000"]
+
+    D2_ScriptThreadTx1 -> D2_ScriptThreadTx1Output;
+
+    D2_ScriptThreadTx1ExtraOutput [shape=point];
+    D2_ScriptThreadTx1 -> D2_ScriptThreadTx1ExtraOutput;
+
+    // --- New for D2 ---
+    D2_ScriptThreadTx2 [label=<
+      <TABLE CELLSPACING="0" CELLPADDING="4" BORDER="1" CELLBORDER="0" style="rounded" color="#aaa">
+        <TR>
+          <TD align="center"><b>Second Script Thread Tx</b></TD>
+        </TR>
+        <TR>
+          <TD cellpadding="0" align="left">
+            <TABLE CELLSPACING="0" CELLPADDING="4" BORDER="0" CELLBORDER="1" style="rounded" color="#aaa">
+              <TR>
+                <TD align="left" colspan="2">Script X is executed.<br/>It checks for a <b>single and correct</b> thread output.</TD>
+              </TR>
+              <TR>
+                <TD align="left"><b>redeemer</b></TD>
+                <TD align="left" balign="left">Action Z</TD>
+              </TR>
+            </TABLE>
+          </TD>
+        </TR>
+        <TR>
+          <TD> </TD>
+        </TR>
+      </TABLE>
+    > color="#aaa" shape="plain"];
+
+    D2_ScriptThreadTx1Output -> D2_ScriptThreadTx2;
+
+    D2_ScriptThreadTx2ExtraInput1 [shape=point];
+    D2_ScriptThreadTx2ExtraInput1 -> D2_ScriptThreadTx2;
+    D2_ScriptThreadTx2ExtraInput2 [shape=point];
+    D2_ScriptThreadTx2ExtraInput2 -> D2_ScriptThreadTx2;
+
+    D2_ScriptThreadTx2Output [label=<
+      <TABLE CELLSPACING="0" CELLPADDING="4" BORDER="0" CELLBORDER="1" style="rounded" color="#aaa">
+        <TR>
+          <TD colspan="2" align="center"><b>Script Thread Output 2</b></TD>
+        </TR>
+        <TR>
+          <TD align="left"><b>address</b></TD>
+          <TD align="left" balign="left">Script X</TD>
+        </TR>
+        <TR>
+          <TD align="left"><b>datum</b></TD>
+          <TD align="left" balign="left">Script state after<br />Action Z</TD>
+        </TR>
+      </TABLE>
+    > shape="plain" border="1" color="#000"]
+
+    D2_ScriptThreadTx2 -> D2_ScriptThreadTx2Output;
+
+    D2_ScriptThreadTx2ExtraOutput1 [shape=point];
+    D2_ScriptThreadTx2 -> D2_ScriptThreadTx2ExtraOutput1;
+
+    D2_ScriptThreadTx2ExtraOutput2 [shape=point];
+    D2_ScriptThreadTx2 -> D2_ScriptThreadTx2ExtraOutput2;
+
+    D2_ScriptThread [shape=circle, style="dashed,rounded", color="#aaa" fillcolor="white", fontname="Helvetica", margin="0", padding="0",
+      label=<<i>Execution Thread Continues…</i><br/><br/> --█--█--█--█--█--█--█--<br/><br/>Script at every transition<br/>verifies proper continuation output.>];
+    D2_ScriptThreadTx2Output -> D2_ScriptThread;
+
+    // --- End New for D2 ---
+  }
+
+  D2_ScriptThread -> D3_ScriptThreadFinalStepTx;
+
+  // --- Diagram 3: Full Thread ---
+  subgraph cluster_D3 {
+    label = "Final Step";
+    labelloc=top;
+    style="dashed";
+    node [shape=rect, style="filled,rounded", fillcolor="#f9f9f9", fontname="Courier New", fontsize="10"];
+    edge [arrowhead=none, headport="n", tailport="s", color="#aaa", fontname="Courier New", fontsize="10"];
+
+    // --- New for D3 (Final Step) ---
+    // Note: The original comment "// Now let's describe the last action/transaction without script outputs" is implicitly covered by this section.
+    D3_ScriptThreadFinalStepTx [label=<
+      <TABLE CELLSPACING="0" CELLPADDING="4" BORDER="1" CELLBORDER="0" style="rounded" color="#aaa">
+        <TR>
+          <TD align="center"><b>Final Script Thread Tx</b></TD>
+        </TR>
+        <TR>
+          <TD cellpadding="0" align="left">
+            <TABLE CELLSPACING="0" CELLPADDING="4" BORDER="0" CELLBORDER="1" style="rounded" color="#aaa">
+              <TR>
+                <TD align="left" colspan="2">Script X is executed.<br/>It ensures that there are<b>no corresponding</b> thread <b>outputs</b>.</TD>
+              </TR>
+              <TR>
+                <TD align="left"><b>redeemer</b></TD>
+                <TD align="left" balign="left">Action W</TD>
+              </TR>
+            </TABLE>
+          </TD>
+        </TR>
+        <TR>
+          <TD> </TD>
+        </TR>
+      </TABLE>
+    > color="#aaa" shape="plain"];
+
+    D3_ScriptThreadFinalStepTxExtraInput1 [shape=point];
+    D3_ScriptThreadFinalStepTxExtraInput1 -> D3_ScriptThreadFinalStepTx;
+
+    D3_ScriptThreadFinalStepTxExtraInput2 [shape=point];
+    D3_ScriptThreadFinalStepTxExtraInput2 -> D3_ScriptThreadFinalStepTx;
+
+    D3_ScriptThreadFinalStepTxOutput1 [shape=point];
+    D3_ScriptThreadFinalStepTx -> D3_ScriptThreadFinalStepTxOutput1 [label=<<i>Non Script X output</i>>];
+
+    D3_ScriptThreadFinalStepTxOutput2 [shape=point];
+    D3_ScriptThreadFinalStepTx -> D3_ScriptThreadFinalStepTxOutput2 [label=<<i>Non Script X output</i>>];
+
+    D3_ScriptThreadFinalStepTxOutput3 [shape=point];
+    D3_ScriptThreadFinalStepTx -> D3_ScriptThreadFinalStepTxOutput3 [label=<<i>Non Script X output</i>>];
+    // --- End New for D3 ---
+  }
+// D1_InitialScriptOutput -> D2_ScriptThreadTx1;
+//   D2_ScriptThread -> D3_ScriptThreadFinalStepTx;
+  // { rank= same; D1_InitialScriptOutput; D2_ScriptThreadTx1; D3_ScriptThreadFinalStepTx }
+}

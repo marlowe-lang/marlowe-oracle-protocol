@@ -1,0 +1,163 @@
+digraph Oracle_Choice_Referencing {
+  rankdir=TD;
+  graph [pad="0.02", nodesep="0.6", ranksep="0.5"];
+  node [shape=rect, style="filled", fillcolor="#f9f9f9", fontname="Courier New", fontsize="10"];
+  edge [arrowhead=none, tailport="s", headport="n", color="#aaa", fontname="Courier New", fontsize="10"];
+
+  MarloweInitialThreadPoint [shape=point];
+  MarloweInitialThreadPoint -> MarloweOracleRequestOutput;
+
+  MarloweOracleRequestOutput [label=<
+    <TABLE CELLSPACING="0" CELLPADDING="6" border="0" CELLBORDER="1" color="#aaa">
+      <TR>
+        <TD colspan="2" align="center"><b>TxOut f288#0</b></TD>
+      </TR>
+      <TR>
+        <TD align="left"><b>address</b></TD>
+        <TD>Marlowe</TD>
+      </TR>
+      <TR>
+        <TD align="left" balign="left"><b>contract</b></TD>
+        <TD align="left" balign="left">oracle request…</TD>
+      </TR>
+    </TABLE>
+  > shape="plain" border="0"]
+
+  MarloweOracleRequestOutput -> Tx [label=<Marlowe Input>];
+
+  Tx [label=<
+    <TABLE CELLSPACING="0" CELLPADDING="4" border="1" CELLBORDER="0" style="rounded" color="#aaa">
+      <TR>
+        <TD colspan="2" align="center"><b>Tx 119a</b></TD>
+      </TR>
+      <TR>
+        <TD CELLPADDING="0">
+          <TABLE CELLSPACING="0" CELLPADDING="6" border="0" CELLBORDER="0">
+            <TR>
+              <TD border="1" align="left"><b>f288#0 redeemer</b></TD>
+              <TD border="1" align="left" balign="left"><b>ORACLE CHOICE</b></TD>
+            </TR>
+            <TR>
+              <TD border="1" align="left"><b>signatories</b></TD>
+              <TD border="1" align="left">Oracle PubKeyHash</TD>
+            </TR>
+            <TR>
+              <TD colspan="2" align="center"> </TD>
+            </TR>
+          </TABLE>
+        </TD>
+      </TR>
+    </TABLE>
+  > color="#aaa" shape="plain"];
+
+
+  FundingOutput [shape=point];
+  FundingOutput -> Tx [label=<<i>Tx funding</i>>];
+
+  MarloweOutput [label=<
+    <TABLE CELLSPACING="0" CELLPADDING="4" border="0" CELLBORDER="1" color="#aaa">
+      <TR>
+        <TD colspan="2" align="center"><b>TxOut 119a#2</b></TD>
+      </TR>
+      <TR>
+        <TD align="left"><b>address</b></TD>
+        <TD>Marlowe</TD>
+      </TR>
+      <TR>
+        <TD align="left"><b>contract</b></TD>
+        <TD align="left" balign="left" cellpadding="8">Enforced delay</TD>
+      </TR>
+      <TR>
+        <TD align="left"><b>state</b></TD>
+        <TD align="left" balign="left" cellpadding="8">Oracle choice</TD>
+      </TR>
+    </TABLE>
+  > shape="plain" border="1" color="#000"]
+
+  Tx -> MarloweOutput [label=<Marlowe Output>];
+
+  change [shape=point];
+  Tx -> change [label=<<i>Tx change</i>>];
+
+  OraclePayout [label=<
+    <TABLE CELLSPACING="0" CELLPADDING="4" border="0" CELLBORDER="1" color="#aaa">
+      <TR>
+        <TD colspan="2" align="center"><b>TxOut 119a#0</b></TD>
+      </TR>
+      <TR>
+        <TD align="left"><b>address</b></TD>
+        <TD cellpadding="8">Oracle PubKeyHash</TD>
+      </TR>
+      <TR>
+        <TD align="left"><b>value</b></TD>
+        <TD align="left" balign="left" cellpadding="8">Oracle fee</TD>
+      </TR>
+    </TABLE>
+  > shape="plain" border="1" color="#000"]
+  Tx -> OraclePayout [label=<<i>Oracle Payout</i>>];
+
+  OraclePayoutThread [shape=point];
+  OraclePayout -> OraclePayoutThread;
+
+  MarloweResultingThreadPoint [shape=point];
+  MarloweOutput -> MarloweResultingThreadPoint;
+
+  SpendingValidatorInitialThreadPoint [shape=point];
+  SpendingValidatorInitialThreadPoint -> SpendingValidatorTx [label=<<i>Tx out<br/>at spending validator<br/>which requires<br/>oracle choice</i>>];
+
+  SpendingValidatorTx [label=<
+    <TABLE CELLSPACING="0" CELLPADDING="4" border="1" CELLBORDER="0" style="rounded" color="#aaa">
+      <TR>
+        <TD colspan="2" align="center"><b>Tx</b></TD>
+      </TR>
+      <TR>
+        <TD CELLPADDING="0">
+          <TABLE CELLSPACING="0" CELLPADDING="6" border="0" CELLBORDER="0">
+            <TR>
+              <TD border="1" align="left"><b>redeemer</b></TD>
+              <TD border="1" align="left" balign="left">oracle choice<br/>at 119a#2</TD>
+            </TR>
+            <TR>
+              <TD colspan="2" align="center"> </TD>
+            </TR>
+          </TABLE>
+        </TD>
+      </TR>
+    </TABLE>
+  > color="#aaa" shape="plain"];
+
+  SpendingValidatorThreadPoint [shape=point];
+  SpendingValidatorTx -> SpendingValidatorThreadPoint;
+
+  MarloweResultingThreadPoint -> SpendingValidatorTx [style="dashed" splines="ortho" label=<reference<br/>input> fontcolor="#888"];
+
+
+  AnotherSpendingValidatorInitialThreadPoint [shape=point];
+  AnotherSpendingValidatorInitialThreadPoint -> AnotherSpendingValidatorTx [label=<<i>Tx out<br/>at spending validator<br/>which requires<br/>oracle choice</i>>];
+
+  AnotherSpendingValidatorTx [label=<
+    <TABLE CELLSPACING="0" CELLPADDING="4" border="1" CELLBORDER="0" style="rounded" color="#aaa">
+      <TR>
+        <TD colspan="2" align="center"><b>Tx</b></TD>
+      </TR>
+      <TR>
+        <TD CELLPADDING="0">
+          <TABLE CELLSPACING="0" CELLPADDING="6" border="0" CELLBORDER="0">
+            <TR>
+              <TD border="1" align="left"><b>redeemer</b></TD>
+              <TD border="1" align="left" balign="left">oracle choice<br/>at 119a#2</TD>
+            </TR>
+            <TR>
+              <TD colspan="2" align="center"> </TD>
+            </TR>
+          </TABLE>
+        </TD>
+      </TR>
+    </TABLE>
+  > color="#aaa" shape="plain"];
+
+  AnotherSpendingValidatorThreadPoint [shape=point];
+  AnotherSpendingValidatorTx -> AnotherSpendingValidatorThreadPoint;
+
+  MarloweResultingThreadPoint -> AnotherSpendingValidatorTx [style="dashed" splines="ortho" label=<reference<br/>input> fontcolor="#888"];
+}
