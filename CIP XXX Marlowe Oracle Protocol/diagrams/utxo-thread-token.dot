@@ -35,7 +35,7 @@ digraph Thread_Token {
               </TD>
             </TR>
             <TR>
-              <TD collspan="2" align="center"> </TD>
+              <TD colspan="2" align="center"> </TD>
             </TR>
           </TABLE>
         </TD>
@@ -151,7 +151,7 @@ digraph Thread_Token {
               </TD>
             </TR>
             <TR>
-              <TD collspan="2" align="center"> </TD>
+              <TD colspan="2" align="center"> </TD>
             </TR>
           </TABLE>
         </TD>

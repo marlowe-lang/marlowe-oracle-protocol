@@ -42,7 +42,7 @@ digraph Oracle_Choice_Referencing {
               <TD border="1" align="left">Oracle PubKeyHash</TD>
             </TR>
             <TR>
-              <TD collspan="2" align="center"> </TD>
+              <TD colspan="2" align="center"> </TD>
             </TR>
           </TABLE>
         </TD>
@@ -118,7 +118,7 @@ digraph Oracle_Choice_Referencing {
               <TD border="1" align="left" balign="left">oracle choice<br/>at 119a#2</TD>
             </TR>
             <TR>
-              <TD collspan="2" align="center"> </TD>
+              <TD colspan="2" align="center"> </TD>
             </TR>
           </TABLE>
         </TD>
@@ -148,7 +148,7 @@ digraph Oracle_Choice_Referencing {
               <TD border="1" align="left" balign="left">oracle choice<br/>at 119a#2</TD>
             </TR>
             <TR>
-              <TD collspan="2" align="center"> </TD>
+              <TD colspan="2" align="center"> </TD>
             </TR>
           </TABLE>
         </TD>

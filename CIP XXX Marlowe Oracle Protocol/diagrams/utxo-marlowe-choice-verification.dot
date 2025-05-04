@@ -21,7 +21,7 @@ digraph Marlowe_Choice_Authenticity {
               <TD border="1" align="left">Oracle PubKeyHash</TD>
             </TR>
             <TR>
-              <TD collspan="2" align="center"> </TD>
+              <TD colspan="2" align="center"> </TD>
             </TR>
           </TABLE>
         </TD>

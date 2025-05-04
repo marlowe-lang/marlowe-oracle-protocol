@@ -19,7 +19,7 @@ digraph Marlowe_Choice_Fake {
               <TD border="1" align="left">Eve PubKeyHash</TD>
             </TR>
             <TR>
-              <TD collspan="2" align="center"> </TD>
+              <TD colspan="2" align="center"> </TD>
             </TR>
           </TABLE>
         </TD>
@@ -85,7 +85,7 @@ digraph Marlowe_Choice_Fake {
 //               <TD border="1" align="left">Eve PubKeyHash</TD>
 //             </TR>
 //             <TR>
-//               <TD collspan="2" align="center"> </TD>
+//               <TD colspan="2" align="center"> </TD>
 //             </TR>
 //           </TABLE>
 //         </TD>

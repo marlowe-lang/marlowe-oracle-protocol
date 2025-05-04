@@ -46,7 +46,7 @@ digraph PlainOraclePublishing {
               <TD border="1" align="left" balign="left">oracle data at<br/>reference input</TD>
             </TR>
             <TR>
-              <TD collspan="2" align="center"> </TD>
+              <TD colspan="2" align="center"> </TD>
             </TR>
           </TABLE>
         </TD>
@@ -76,7 +76,7 @@ digraph PlainOraclePublishing {
               <TD border="1" align="left" balign="left">oracle data at<br/>reference input</TD>
             </TR>
             <TR>
-              <TD collspan="2" align="center"> </TD>
+              <TD colspan="2" align="center"> </TD>
             </TR>
           </TABLE>
         </TD>

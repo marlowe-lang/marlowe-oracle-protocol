@@ -25,7 +25,7 @@ digraph Spawning_Oracle_Requests {
               <TD border="1" align="left">Oracle PubKeyHash</TD>
             </TR>
             <TR>
-              <TD collspan="2" align="center"> </TD>
+              <TD colspan="2" align="center"> </TD>
             </TR>
           </TABLE>
         </TD>
@@ -70,7 +70,7 @@ digraph Spawning_Oracle_Requests {
               <TD border="1" align="left">Oracle PubKeyHash</TD>
             </TR>
             <TR>
-              <TD collspan="2" align="center"> </TD>
+              <TD colspan="2" align="center"> </TD>
             </TR>
           </TABLE>
         </TD>
@@ -131,7 +131,7 @@ digraph Spawning_Oracle_Requests {
               <TD border="1" align="left">Oracle PubKeyHash</TD>
             </TR>
             <TR>
-              <TD collspan="2" align="center"> </TD>
+              <TD colspan="2" align="center"> </TD>
             </TR>
           </TABLE>
         </TD>
@@ -156,7 +156,7 @@ digraph Spawning_Oracle_Requests {
               <TD border="1" align="left" balign="left">oracle choice at<br/><b>119a#0</b></TD>
             </TR>
             <TR>
-              <TD collspan="2" align="center"> </TD>
+              <TD colspan="2" align="center"> </TD>
             </TR>
           </TABLE>
         </TD>
@@ -184,7 +184,7 @@ digraph Spawning_Oracle_Requests {
               <TD border="1" align="left" balign="left">oracle choice at<br/><b>119a#0</b></TD>
             </TR>
             <TR>
-              <TD collspan="2" align="center"> </TD>
+              <TD colspan="2" align="center"> </TD>
             </TR>
           </TABLE>
         </TD>
@@ -220,7 +220,7 @@ digraph Spawning_Oracle_Requests {
   //             <TD border="1" align="left">Oracle PubKeyHash</TD>
   //           </TR>
   //           <TR>
-  //             <TD collspan="2" align="center"> </TD>
+  //             <TD colspan="2" align="center"> </TD>
   //           </TR>
   //         </TABLE>
   //       </TD>

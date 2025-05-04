@@ -35,7 +35,7 @@ digraph Marlowe_Proof_Of_Execution {
               </TD>
             </TR>
             <TR>
-              <TD collspan="2" align="center"> </TD>
+              <TD colspan="2" align="center"> </TD>
             </TR>
           </TABLE>
         </TD>
@@ -185,7 +185,7 @@ digraph Marlowe_Proof_Of_Execution {
               <TD BORDER="1" align="left" balign="left"><b>CLOSE</b></TD>
             </TR>
             <TR>
-              <TD collspan="2" align="center"> </TD>
+              <TD colspan="2" align="center"> </TD>
             </TR>
           </TABLE>
         </TD>
