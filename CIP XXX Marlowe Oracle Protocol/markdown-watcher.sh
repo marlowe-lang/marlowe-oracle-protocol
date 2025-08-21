@@ -1,7 +1,11 @@
 #!/usr/bin/env bash
 
 
-inotifywait -m -e modify --quiet --format '%w%f' --include '.*\.md$' . | while read -r mdfile; do
+inotifywait -m -e close_write --quiet --format '%w%f' --include '.*\.md$' . | while read -r mdfile; do
+    echo ""
+    echo ""
+    echo ""
+    echo ""
     echo "Detected change in $mdfile"
     htmlfile="${mdfile%.md}.html"
     # Compile only the modified .dot to .svg
@@ -13,5 +17,5 @@ inotifywait -m -e modify --quiet --format '%w%f' --include '.*\.md$' . | while r
       "$mdfile" -o "$htmlfile"
     echo "Generated $htmlfile"
     # Open (or bring to front) only that single SVG
-    firefox "$htmlfile" &
+    # firefox "$htmlfile" &
 done
