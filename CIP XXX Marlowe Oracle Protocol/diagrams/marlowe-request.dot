@@ -10,7 +10,7 @@ digraph MarloweRequest {
 
   OracleChoiceStep -> PayStep;
 
-  CloseStep [label=<<b>CLOSE</b>> color="#aaa" ];
+  ContinuationStep [label=<<b>post oracle choice contract</b>> color="#aaa" ];
 
-  PayStep -> CloseStep;
+  PayStep -> ContinuationStep;
 }
