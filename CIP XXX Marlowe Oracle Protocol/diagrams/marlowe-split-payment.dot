@@ -6,11 +6,11 @@ digraph MarloweRequest {
 
   OracleChoiceStep [label=<<b>WHEN CHOICE</b> <i>x</i> <b>BY</b> <i>oracle pubKeyHash</i>> color="#aaa" ];
 
-  PayStep1 [label=<<b>PAY </b><i>1/2 * oracle_fee</i> <b>TO</b> <i>oracle pubKeyHash</i> <b>BY</b> <i>party A</i>> color="#aaa" ];
+  PayStep1 [label=<<b>PAY </b><i>1/2 * oracleFee</i> <b>TO</b> <i>oracle pubKeyHash</i> <b>BY</b> <i>party A</i>> color="#aaa" ];
 
   OracleChoiceStep -> PayStep1;
 
-  PayStep2 [label=<<b>PAY </b><i>1/2 * oracle_fee</i> <b>TO</b> <i>oracle pubKeyHash</i> <b>BY</b> <i>party B</i>> color="#aaa" ];
+  PayStep2 [label=<<b>PAY </b><i>1/2 * oracleFee</i> <b>TO</b> <i>oracle pubKeyHash</i> <b>BY</b> <i>party B</i>> color="#aaa" ];
 
   PayStep1 -> PayStep2;
 
