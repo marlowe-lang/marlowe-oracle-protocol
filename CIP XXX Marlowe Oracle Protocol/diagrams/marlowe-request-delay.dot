@@ -11,7 +11,7 @@ digraph MarloweRequestDelay {
 
   OracleChoiceStep -> PayStep;
 
-  DelayStep [label=<<b>WHEN TX_INTERVAL_START</b> &gt; <i>delay timestamp</i> > color="#aaa" ];
+  DelayStep [label=<<b>WHEN []</b> <i>delayTimestamp</i> > color="#aaa" ];
 
   PayStep -> DelayStep;
 
